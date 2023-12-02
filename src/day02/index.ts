@@ -9,27 +9,31 @@ const parseInput = (rawInput: string): Game[] => {
   return rawInput.split('\n').map((game, idx) => {
     return {
       id: idx + 1,
-      rolls: game.substring(game.indexOf(':')).split(';').map(roll => {
+      DieMax: game.substring(game.indexOf(':')).split(';').map(roll => {
         const dice = roll.split(',');
         const red = parseInt('0' + roll.match(redSearch)?.at(0) , 10);
         const green = parseInt('0' + roll.match(greenSearch)?.at(0) , 10);
         const blue = parseInt('0' + roll.match(blueSearch)?.at(0) , 10);
-
-        // console.log(dice, {red, green, blue});
 
         return {
           r: 0 + red,
           g: 0 + green,
           b: 0 + blue,
         }
-      })
+      }).reduce((prev, curr) => {
+        return {
+          r: Math.max(prev.r, curr.r),
+          g: Math.max(prev.g, curr.g),
+          b: Math.max(prev.b, curr.b) 
+        };
+      }, {r:0, g:0, b:0})
     };
   });
 };
 
 type Game = {
   id: number,
-  rolls: Die[]
+  DieMax: Die
 }
 
 type Die = {
@@ -46,31 +50,17 @@ const p1Max = {
 
 const part1 = (rawInput: string) => {
   const input = parseInput(rawInput);
-  return input.filter(game => {
-    const gameMax = game.rolls.reduce((prev, curr) => {
-      return {
-        r: Math.max(prev.r, curr.r),
-        g: Math.max(prev.g, curr.g),
-        b: Math.max(prev.b, curr.b) 
-      };
-    }, {r:0, g:0, b:0});
-    return p1Max.r >= gameMax.r && p1Max.g >= gameMax.g && p1Max.b >= gameMax.b;
-  }).map(g => g.id).reduce(sum, 0);
+
+  return input.filter(game =>
+    p1Max.r >= game.DieMax.r && p1Max.g >= game.DieMax.g && p1Max.b >= game.DieMax.b
+  ).map(g => g.id).reduce(sum, 0);
 };
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
   return input.map(game => {
-    return game.rolls.reduce((prev, curr) => {
-      return {
-        r: Math.max(prev.r, curr.r),
-        g: Math.max(prev.g, curr.g),
-        b: Math.max(prev.b, curr.b) 
-      };
-    }, {r: 0, g: 0, b: 0})
-  }).map(d => Object.values(d).reduce(multiply, 1))
-  .reduce(sum, 0);
-  return;
+    return Object.values(game.DieMax).reduce(multiply, 1);
+  }).reduce(sum, 0);
 };
 
 run({
