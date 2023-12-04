@@ -33,3 +33,7 @@
 export const sum = (acc: number, curr: number) => acc + curr;
 
 export const multiply = (acc: number, curr: number) => acc * curr;
+
+export function intersect<T>(base: Set<T>, ...rest:Set<T>[]) {
+    return new Set([...base].filter((x) => rest.reduce((acc, curr) => acc && curr.has(x), true)));
+};
