@@ -35,5 +35,13 @@ export const sum = (acc: number, curr: number) => acc + curr;
 export const multiply = (acc: number, curr: number) => acc * curr;
 
 export function intersect<T>(base: Set<T>, ...rest:Set<T>[]) {
-    return new Set([...base].filter((x) => rest.reduce((acc, curr) => acc && curr.has(x), true)));
-};
+  return new Set([...base].filter((x) => rest.reduce((acc, curr) => acc && curr.has(x), true)));
+}
+
+export const range = (start: number, length: number, step: number = 1) => {
+  return Array.from({ length }, (_, i) => start + i * step);
+}
+
+export function chunkArray<T>(arr: T[], chunkSize: number) {
+  return [...Array(Math.ceil(arr.length/chunkSize))].map((_, i) => arr.slice(i * chunkSize, i * chunkSize + chunkSize));
+}
