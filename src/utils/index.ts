@@ -45,3 +45,5 @@ export const range = (start: number, length: number, step: number = 1) => {
 export function chunkArray<T>(arr: T[], chunkSize: number) {
   return [...Array(Math.ceil(arr.length/chunkSize))].map((_, i) => arr.slice(i * chunkSize, i * chunkSize + chunkSize));
 }
+
+export const strToNum = (str: string) => parseInt(str, 10);
